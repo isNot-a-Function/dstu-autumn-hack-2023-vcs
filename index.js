@@ -1,4 +1,4 @@
-const ACTIONS = require('./actions.js');
+const ACTIONS = require('./action.js');
 const PORT = 4040;
 
 const express = require('express')
