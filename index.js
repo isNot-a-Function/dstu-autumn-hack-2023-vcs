@@ -11,7 +11,7 @@ const { Server } = require('socket.io');
 const io = new Server(server, {
   allowEIO3: true,
   cors: {
-    origin: "https://nikko-develop.space",
+    origin: ["https://nikko-develop.space", "http://localhost:3000"],
   },
   path: '/vcs',
 });
