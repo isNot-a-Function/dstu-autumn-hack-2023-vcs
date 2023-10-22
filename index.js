@@ -1,11 +1,21 @@
-const path = require('path');
-const express = require('express');
-const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
-
-const ACTIONS = require('./action.js');
+const ACTIONS = require('./actions.js');
 const PORT = 4040;
+
+const express = require('express')
+const app = express()
+
+const http = require('http');
+const server = require('http').createServer(app)
+const { Server } = require('socket.io');
+
+const io = new Server(server, {
+  allowEIO3: true,
+  cors: {
+    origin: "https://nikko-develop.space",
+  },
+  path: '/vcs',
+});
+
 
 function getClientRooms() {
   const { rooms } = io.sockets.adapter;
@@ -14,7 +24,7 @@ function getClientRooms() {
 
 setInterval(() => {
   const { rooms } = io.sockets.adapter;
-  console.log(Array.from(rooms.keys()));
+  //console.log(Array.from(rooms.keys()));
 }, 1000);
 
 function shareRoomsInfo() {
@@ -24,6 +34,7 @@ function shareRoomsInfo() {
 }
 
 io.on('connection', (socket) => {
+console.log('CONNECTION');
   shareRoomsInfo();
 
   socket.on(ACTIONS.SHARE_ROOMS, () => {
@@ -106,10 +117,10 @@ io.on('connection', (socket) => {
 
 // app.use(express.static(publicPath));
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(publicPath, 'index.html'));
-// });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(publicPath, 'index.html'));
+});
 
 server.listen(PORT, () => {
-  console.log('Server Started!');
+  console.log(`Server Started on port ${PORT}`);
 });
